@@ -1,0 +1,99 @@
+{% extends 'polls/base.html' %}
+{% load static %}
+{% block content %}
+<style>
+#stats-container svg {
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+  display: block;
+  margin: 0 auto;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+</style>
+
+<div class="container mt-4">
+  <div class="row">
+    <div class="col-md-5 border-end">
+      <h3>📅 Filter Polls</h3>
+      <input type="date" id="from-date" class="form-control mb-2">
+      <input type="date" id="to-date" class="form-control mb-2">
+      <button class="btn btn-dark w-100" id="search-btn">Search</button>
+      <hr>
+      <div id="question-list"></div>
+    </div>
+
+    <div class="col-md-7">
+      <h3>📊 Poll Statistics</h3>
+      <div id="stats-container"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+async function fetchQuestions() {
+  const response = await fetch('/api/analytics/questions/');
+  const data = await response.json();
+  const list = document.getElementById('question-list');
+  list.innerHTML = '';
+  data.forEach(q => {
+    const el = document.createElement('a');
+    el.href = '#';
+    el.textContent = q.question_text;
+    el.classList.add('d-block', 'p-2', 'border', 'rounded', 'mb-2');
+    el.onclick = () => loadStats(q.id);
+    list.appendChild(el);
+  });
+}
+
+async function loadStats(id) {
+  const res = await fetch(`/api/analytics/questions/${id}/stats/`);
+  const data = await res.json();
+  const stats = document.getElementById('stats-container');
+  stats.innerHTML = `
+    <h4>${data.question_text}</h4>
+    <p>Total votes: ${data.total_votes}</p>
+    <div>${data.histogram_svg}</div>
+  `;
+}
+
+document.getElementById('search-btn').addEventListener('click', async () => {
+  const fromDate = document.getElementById('from-date').value;
+  const toDate = document.getElementById('to-date').value;
+
+  if (!fromDate || !toDate) {
+    alert('Please select both dates!');
+    return;
+  }
+
+  const response = await fetch('/api/analytics/questions/filter/', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({
+      'publication-dates': { from: fromDate, to: toDate }
+    })
+  });
+
+  const data = await response.json();
+  const list = document.getElementById('question-list');
+  list.innerHTML = '';
+
+  if (data.questions) {
+    data.questions.forEach(q => {
+      const el = document.createElement('a');
+      el.href = '#';
+      el.textContent = q.question_text;
+      el.classList.add('d-block', 'p-2', 'border', 'rounded', 'mb-2');
+      el.onclick = () => loadStats(q.id);
+      list.appendChild(el);
+    });
+  } else {
+    list.innerHTML = '<p>No questions found for this period.</p>';
+  }
+});
+
+document.addEventListener('DOMContentLoaded', fetchQuestions);
+</script>
+
+{% endblock %}

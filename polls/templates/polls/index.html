@@ -1,0 +1,29 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    <div class="polls-list">
+        {% if latest_question_list %}
+            {% for question in latest_question_list %}
+                <div class="poll">
+                    <h4>
+                        <a href="{% url 'polls:detail' question.id %}">
+                            {{ question.question_text }}
+                        </a>
+                    </h4>
+                    <p class="date">Published: {{ question.pub_date|date:"F d, Y" }}</p>
+                    {% if user.is_staff %}
+                        <a href="{% url 'polls:poll_edit' question.id %}" class="btn btn-sm btn-secondary">Edit</a>
+                    {% endif %}
+                </div>
+            {% endfor %}
+        {% else %}
+            <div class="alert alert-info">
+                <p>No polls are available.
+                {% if user.is_staff %}
+                    <a href="{% url 'polls:poll_new' %}">Create one!</a>
+                {% endif %}
+                </p>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}

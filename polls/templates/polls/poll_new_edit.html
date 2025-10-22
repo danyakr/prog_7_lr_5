@@ -1,0 +1,28 @@
+{% extends 'polls/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <div class="poll-form-container">
+        <h2>
+            {% if form.instance.pk %}
+                ✏️ Edit Poll
+            {% else %}
+                ➕ Create New Poll
+            {% endif %}
+        </h2>
+
+        <form method="POST" class="poll-form mt-4">
+            {% csrf_token %}
+            {{ form|crispy }}
+
+            <div class="mt-4">
+                <button type="submit" class="btn btn-dark">💾 Save</button>
+                <a href="{% url 'polls:index' %}" class="btn btn-secondary">❌ Cancel</a>
+            </div>
+        </form>
+
+        <div class="alert alert-info mt-4">
+            <strong>💡 Tip:</strong> Enter each answer option on a separate line in the "Question Choices" field.
+        </div>
+    </div>
+{% endblock %}

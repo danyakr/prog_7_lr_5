@@ -1,0 +1,31 @@
+{% extends 'polls/base.html' %}
+{% load socialaccount %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4 text-center">
+                <h2 class="mb-4">🔐 Sign In Via Google</h2>
+
+                <p class="mb-4">
+                    You are about to sign in using your Google account.
+                </p>
+
+                <form method="POST" action="{{ action }}">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-dark btn-lg">Continue</button>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+
+                <p class="mb-0">
+                    Or <a href="{% url 'polls:login' %}">login with username/email</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

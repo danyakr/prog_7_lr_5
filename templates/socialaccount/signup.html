@@ -1,0 +1,39 @@
+{% extends 'polls/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6 col-lg-5">
+        <div class="card shadow-lg border-0 rounded-4">
+            <div class="card-body p-4 text-center">
+                <h2 class="mb-4">🔐 Sign In via Google</h2>
+
+                <p class="mb-4">
+                    You are about to sign in using your Google account.
+                </p>
+
+                <form method="POST" action="{{ action }}">
+                    {% csrf_token %}
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-dark btn-lg">Continue</button>
+                    </div>
+                </form>
+
+                <hr class="my-4">
+
+                <!-- Альтернативный вход -->
+                <div class="d-grid gap-2 mb-3">
+                    <a href="{% url 'polls:login' %}" class="btn btn-outline-dark btn-lg">
+                        Login with username/email
+                    </a>
+                </div>
+
+                <p class="mb-0">
+                    Don't have an account?
+                    <a href="{% url 'polls:register' %}">Register here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

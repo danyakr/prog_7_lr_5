@@ -1,0 +1,33 @@
+{% extends 'polls/base.html' %}
+
+{% block content %}
+    <div class="row justify-content-center">
+        <div class="col-md-8 text-center">
+            <div class="card shadow-lg">
+                <div class="card-body p-5">
+                    <div style="font-size: 72px; margin-bottom: 20px;">❌</div>
+                    <h1 class="text-danger mb-4">Activation Failed</h1>
+                    <p class="lead">The activation link is invalid or has expired.</p>
+
+                    <div class="alert alert-warning mt-4">
+                        <strong>Possible reasons:</strong>
+                        <ul class="text-start">
+                            <li>The link has already been used</li>
+                            <li>The link has expired</li>
+                            <li>The link was copied incorrectly</li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-4">
+                        <a href="{% url 'polls:register' %}" class="btn btn-dark btn-lg">
+                            📝 Register Again
+                        </a>
+                        <a href="{% url 'polls:index' %}" class="btn btn-secondary btn-lg">
+                            🏠 Go to Home
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
